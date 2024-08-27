@@ -1,6 +1,7 @@
 import { hash } from "bcryptjs";
 import { UserAlreadyExists } from "../../errors/UserAlreadyExists";
 import { prismaClient } from "../../libs/prismaClient";
+import { generateAccessToken } from "../../utils/generateAccessToken";
 
 interface IInput{
     name: string;
@@ -8,7 +9,9 @@ interface IInput{
     password: string;
 }
 
-type IOutput = void;
+interface IOutput {
+    token: string;
+}
 
 export class SignUpUseCase{
 
@@ -25,12 +28,21 @@ export class SignUpUseCase{
 
         const hashedPassword = await hash(password, this.salt)
 
-        await prismaClient.user.create({
+        const { id } = await prismaClient.user.create({
             data:{
                 name,
                 email,
                 password: hashedPassword,
             }
-        })
+        });
+
+        const token = generateAccessToken(id);
+
+        return {
+            token,
+        };
+
+        }
     }
-}
+
+

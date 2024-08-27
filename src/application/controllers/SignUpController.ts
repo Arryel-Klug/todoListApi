@@ -18,11 +18,13 @@ export class SignUpController implements IController{
         try{
             const { name, email, password } = schema.parse(body);
 
-            await this.signUpUseCase.execute({name, email, password});
+            const { token } = await this.signUpUseCase.execute({name, email, password});
 
             return {
-                statusCode: 204,
-                body: null,
+                statusCode: 200,
+                body: {
+                    token,
+                },
             }
 
         } catch (error){

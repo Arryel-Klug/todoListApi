@@ -1,21 +1,33 @@
 import express from 'express';
-import { SignUpController } from '../application/controllers/SignUpController';
-import { SignUpUseCase } from '../application/useCases/authentication/SignUpUseCase';
+import { makeSignUpController } from '../factories/makeSignUpController';
+import { makeSignInController } from '../factories/makeSignInController';
 
 const app = express();
 const port = 3001;
 
-app.post('/sign-up', (request, response) => {
-    const SALT = 10;
-    const signUpUseCase = new SignUpUseCase(SALT)
-    const signUpController = new SignUpController(signUpUseCase);
+app.use(express.json());
+
+app.post('/sign-up', async (request, response) => {
+
+    const signUpController = makeSignUpController();
+
+    const { statusCode, body } = await signUpController.handle({
+        body: request.body,
+    });
+
+    response.status(statusCode).json(body);
 });
 
-// app.get('/*', (request, response) => {
-//     response.send(404).json({
-//         message: 'Not Found'
-//     })
-// })
+app.post('/sign-in', async (request, response) => {
+
+    const signInController = makeSignInController();
+
+    const { statusCode, body } = await signInController.handle({
+        body: request.body,
+    });
+
+    response.status(statusCode).json(body);
+})
 
 app.listen(port, () => {
     console.log(`Server started at http://localhost:${port}.`)

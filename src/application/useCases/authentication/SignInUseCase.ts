@@ -1,8 +1,7 @@
 import { compare } from "bcryptjs";
-import { sign } from "jsonwebtoken";
 import { prismaClient } from "../../libs/prismaClient";
 import { InvalidCredentials } from "../../errors/InvalidCredentials";
-import { env } from "../../config/env";
+import { generateAccessToken } from "../../utils/generateAccessToken";
 
 interface IInput{
     email: string;
@@ -10,7 +9,7 @@ interface IInput{
 }
 
 interface IOutput {
-    accessToken: string;
+    token: string;
 }
 
 export class SignInUseCase{
@@ -29,14 +28,10 @@ export class SignInUseCase{
             throw new InvalidCredentials();
         }
 
-        const accessToken = sign(
-            { sub: user.id },
-            env.jwtSecret,
-            {expiresIn: "1d"}
-        );
+        const token = generateAccessToken(user.id);
 
         return {
-            accessToken,
-        }
+            token,
+        };
     }
 }
