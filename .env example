@@ -1,0 +1,2 @@
+DATABASE_URL="postgresql://root:root@localhost:5432/todolistapi?schema=public"
+JWT_SECRET="YOUR_JWT_SECRET"
