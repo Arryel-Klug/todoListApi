@@ -1,5 +1,0 @@
-banco de dados (prisma) -> useCase (regra de negocio) -> controller ->
-
-
-hash bcryptjs para hash password
-zod para validação
