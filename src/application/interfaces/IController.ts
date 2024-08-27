@@ -1,9 +1,11 @@
 export interface IRequest {
     body: Record<string, any>;
+    params: Record<string, string>;
+    userId: string | any;
 }
 
 export interface IResponse {
-    statusCode: number,
+    statusCode: number;
     body: Record<string, any> | null;
 }
 
