@@ -16,6 +16,15 @@ export class CreateTodoItemController implements IController{
 
             const { title, description } = schema.parse(body);
 
+            if (!userId){
+                return {
+                    statusCode: 400,
+                    body: {
+                        error: 'User id undefined',
+                    }
+                };
+            }
+
             const todoItem = await this.createTodoItemUseCase.execute({ userId, title, description});
 
             return {

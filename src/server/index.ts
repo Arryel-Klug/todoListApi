@@ -5,6 +5,7 @@ import { makeSignUpController } from '../factories/makeSignUpController';
 import { makeSignInController } from '../factories/makeSignInController';
 import { makeCreateTodoItemController } from '../factories/makeCreateTodoItemController';
 import { makeAuthenticationMiddleware } from '../factories/makeAuthenticationMiddleware';
+import { makeDeleteTodoItemController } from '../factories/makeDeleteTodoItemController';
 
 const app = express();
 const port = 3001;
@@ -17,6 +18,10 @@ app.post('/sign-in', routeAdpater(makeSignInController()));
 app.post('/todos',
     middlewareAdapter(makeAuthenticationMiddleware()),
     routeAdpater(makeCreateTodoItemController()));
+
+app.delete('/todos/:id',
+    middlewareAdapter(makeAuthenticationMiddleware()),
+    routeAdpater(makeDeleteTodoItemController()));
 
 app.listen(port, () => {
     console.log(`Server started at http://localhost:${port}.`)
