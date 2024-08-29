@@ -32,7 +32,7 @@ export class AuthenticationMiddleware implements IMiddleware{
             return{
                 statusCode: 401,
                 body: {
-                    error: 'Invalid token.'
+                    error: 'Unauthorized'
                 },
             };
         }

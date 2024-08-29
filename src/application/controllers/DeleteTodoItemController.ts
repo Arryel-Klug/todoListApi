@@ -1,22 +1,20 @@
 import { z, ZodError } from "zod";
 import { IController, IRequest, IResponse } from "../interfaces/IController";
 import { DeleteTodoItemUseCase } from "../useCases/todoItem/DeleteTodoItemUseCase";
-import { GetTodoItemUseCase } from "../useCases/todoItem/GetTodoItemUseCase";
+
 
 const schema = z.object({
     id: z.string().uuid(),
 })
 
 export class DeleteTodoItemController implements IController{
-    constructor(
-        private readonly deleteTodoItemUseCase: DeleteTodoItemUseCase,
-        private readonly getTodoItemUseCase: GetTodoItemUseCase
-    ) {}
+    constructor(private readonly deleteTodoItemUseCase: DeleteTodoItemUseCase) {}
 
     async handle({ params, userId }: IRequest): Promise<IResponse> {
         try {
 
             const { id } = schema.parse(params);
+
 
             if (!userId){
                 return {

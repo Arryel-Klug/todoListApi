@@ -11,12 +11,12 @@ interface IOutput{
     description: string;
 }
 
-export class GetTodoItemUseCase{
-    async execute ({ id, userId }: IInput): Promise<IOutput | null>{
-        const todoitem = await prismaClient.todoItem.findUnique({
+export class ReadTodoItemUseCase{
+    async execute ({ id, userId }: IInput): Promise<IOutput[] | null>{
+        const todoitem = await prismaClient.todoItem.findMany({
             where: { id, userId },
-        })
-        console.log(todoitem)
+        });
+
         return todoitem;
     }
 };
