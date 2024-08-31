@@ -3,6 +3,7 @@ import { prismaClient } from "../../libs/prismaClient";
 interface IInput{
     id: string;
     userId: string;
+
 }
 
 interface IOutput{
@@ -12,11 +13,11 @@ interface IOutput{
 }
 
 export class ReadTodoItemUseCase{
-    async execute ({ id, userId }: IInput): Promise<IOutput[] | null>{
-        const todoitem = await prismaClient.todoItem.findMany({
-            where: { id, userId },
-        });
+    async execute ({ userId, id }: IInput): Promise<IOutput | null >{
 
-        return todoitem;
+        const todoItem = await prismaClient.todoItem.findUnique({
+            where: { userId, id },
+    })
+        return todoItem
     }
 };

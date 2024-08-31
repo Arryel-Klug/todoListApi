@@ -7,9 +7,11 @@ import { makeCreateTodoItemController } from '../factories/makeCreateTodoItemCon
 import { makeAuthenticationMiddleware } from '../factories/makeAuthenticationMiddleware';
 import { makeDeleteTodoItemController } from '../factories/makeDeleteTodoItemController';
 import { makeUpdateTodoItemController } from '../factories/makeUpdateTodoItemController';
+import { makeReadTodoItemController } from '../factories/makeReadTodoItemController';
+
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT;
 
 app.use(express.json());
 
@@ -27,6 +29,10 @@ app.delete('/todos/:id',
 app.put('/todos/:id',
     middlewareAdapter(makeAuthenticationMiddleware()),
     routeAdpater(makeUpdateTodoItemController()));
+
+app.get('/todos/:id',
+    middlewareAdapter(makeAuthenticationMiddleware()),
+    routeAdpater(makeReadTodoItemController()));
 
 
 
