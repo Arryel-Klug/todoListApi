@@ -29,9 +29,7 @@ export class CreateTodoItemController implements IController{
 
             return {
                 statusCode: 200,
-                body: {
-                    todoItem
-                },
+                body: todoItem,
             }
         } catch (error){
             if (error instanceof ZodError){

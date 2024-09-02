@@ -31,9 +31,7 @@ export class UpdateTodoItemController implements IController{
 
             return {
                 statusCode: 200,
-                body: {
-                    todoItem
-                },
+                body: todoItem,
             }
 
         } catch (error){

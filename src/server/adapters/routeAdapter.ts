@@ -6,6 +6,7 @@ export  function routeAdpater(controller: IController){
         const { statusCode, body } = await controller.handle({
             body: request.body,
             params: request.params,
+            query: request.query,
             userId: request.metadata?.userId
         });
 

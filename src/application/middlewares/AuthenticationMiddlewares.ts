@@ -1,4 +1,3 @@
-
 import { verify } from "jsonwebtoken";
 import { IData, IMiddleware, IRequest, IResponse } from "../interfaces/IMiddleware";
 import { env } from "../config/env";

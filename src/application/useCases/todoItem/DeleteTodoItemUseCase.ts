@@ -18,7 +18,7 @@ export class DeleteTodoItemUseCase{
         } catch (error) {
             console.log('Deleting: Todo item not found.', {
                 id, userId
-            })
+            });
         }
     }
 };

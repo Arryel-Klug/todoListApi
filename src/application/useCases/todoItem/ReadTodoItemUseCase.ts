@@ -18,6 +18,7 @@ export class ReadTodoItemUseCase{
         const todoItem = await prismaClient.todoItem.findUnique({
             where: { userId, id },
     })
-        return todoItem
+
+        return todoItem;
     }
 };

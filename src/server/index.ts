@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import { routeAdpater } from './adapters/routeAdapter';
 import { middlewareAdapter } from './adapters/middlewareAdapter';
 import { makeSignUpController } from '../factories/makeSignUpController';
@@ -8,6 +8,8 @@ import { makeAuthenticationMiddleware } from '../factories/makeAuthenticationMid
 import { makeDeleteTodoItemController } from '../factories/makeDeleteTodoItemController';
 import { makeUpdateTodoItemController } from '../factories/makeUpdateTodoItemController';
 import { makeReadTodoItemController } from '../factories/makeReadTodoItemController';
+import errorHandler from '../application/middlewares/ErrorHandlerMiddleware';
+import { makeReadAllTodoItemController } from '../factories/makeReadAllTodoItemController';
 
 
 const app = express();
@@ -34,12 +36,11 @@ app.get('/todos/:id',
     middlewareAdapter(makeAuthenticationMiddleware()),
     routeAdpater(makeReadTodoItemController()));
 
+app.get('/todos',
+    middlewareAdapter(makeAuthenticationMiddleware()),
+    routeAdpater(makeReadAllTodoItemController()));
 
-
-app.use((error: Error,request: Request ,response: Response, next: NextFunction) => {
-    console.error(error);
-    response.status(500).send(error);
-});
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`Server started at http://localhost:${port}.`)

@@ -19,6 +19,12 @@ export class CreateTodoItemUseCase{
                 userId,
                 title,
                 description,
+            },
+
+            select: {
+                id: true,
+                title: true,
+                description: true
             }
         });
 

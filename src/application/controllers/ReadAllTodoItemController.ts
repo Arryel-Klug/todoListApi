@@ -1,18 +1,26 @@
 import { z, ZodError } from "zod";
 import { IController, IRequest, IResponse } from "../interfaces/IController";
-import { ReadTodoItemUseCase } from "../useCases/todoItem/ReadTodoItemUseCase";
+import { ReadAllTodoItemUseCase } from "../useCases/todoItem/ReadAllTodoItemUseCase";
 
-const schema = z.object({
-     id: z.string().uuid(),
-})
+export class ReadAllTodoItemController implements IController{
+    constructor(private readonly readAllTodoItemUseCase: ReadAllTodoItemUseCase) {}
 
-export class ReadTodoItemController implements IController{
-    constructor(private readonly readTodoItemUseCase: ReadTodoItemUseCase) {}
+    async handle({ query, userId }: IRequest): Promise<IResponse> {
 
-    async handle({ params, userId }: IRequest): Promise<IResponse> {
+        let { page, limit } = query;
+
+        if(!page){
+            page = 1;
+        }
+
+        if(!limit){
+            limit = 10;
+        }
+
+        page = parseInt(page);
+        limit = parseInt(limit);
+
         try {
-
-            const { id } = schema.parse(params);
 
             if (!userId){
                 return {
@@ -23,9 +31,9 @@ export class ReadTodoItemController implements IController{
                 };
             }
 
-            const todoItem = await this.readTodoItemUseCase.execute({ id, userId });
+            const result = await this.readAllTodoItemUseCase.execute({ userId, page, limit });
 
-            if (!todoItem){
+            if (!result){
                 return {
                     statusCode: 404,
                     body: {
@@ -37,7 +45,10 @@ export class ReadTodoItemController implements IController{
             return {
                 statusCode: 200,
                 body: {
-                    todoItem
+                    data: result.todoItems,
+                    page,
+                    limit,
+                    total: result.totalCount
                 },
             }
 
