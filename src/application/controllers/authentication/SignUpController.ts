@@ -1,23 +1,24 @@
 import { z, ZodError } from "zod";
 
-import { IController, IRequest, IResponse } from "../interfaces/IController";
-import { SignInUseCase } from "../useCases/authentication/SignInUseCase";
-import { InvalidCredentials } from "../errors/InvalidCredentials";
+import { IController, IRequest, IResponse } from "../../interfaces/IController";
+import { SignUpUseCase } from "../../useCases/authentication/SignUpUseCase";
+import { UserAlreadyExists } from "../../errors/UserAlreadyExists";
 
 const schema = z.object({
+    name: z.string().min(2),
     email: z.string().email().min(1),
     password: z.string().min(8),
 
 });
 
-export class SignInController implements IController{
-    constructor(private readonly signInUseCase: SignInUseCase) {}
+export class SignUpController implements IController{
+    constructor(private readonly signUpUseCase: SignUpUseCase) {}
 
     async handle({ body }: IRequest): Promise<IResponse> {
         try{
-            const { email, password } = schema.parse(body);
+            const { name, email, password } = schema.parse(body);
 
-            const { token } = await this.signInUseCase.execute({ email, password });
+            const { token } = await this.signUpUseCase.execute({name, email, password});
 
             return {
                 statusCode: 200,
@@ -33,11 +34,11 @@ export class SignInController implements IController{
                     body: error.issues,
                 };
             }
-            if (error instanceof InvalidCredentials){
+            if (error instanceof UserAlreadyExists){
                 return {
-                    statusCode: 401,
+                    statusCode: 409,
                     body: {
-                        error: 'Invalid Credentials.',
+                        error: 'This e-mail is already in use.'
                     }
                 }
             }

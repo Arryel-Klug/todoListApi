@@ -1,20 +1,20 @@
 import { z, ZodError } from "zod";
 import { IController, IRequest, IResponse } from "../interfaces/IController";
-import { CreateTodoItemUseCase } from "../useCases/todoItem/CreateTodoItemUseCase";
+import { DeleteTodoItemUseCase } from "../useCases/todoItem/DeleteTodoItemUseCase";
 
 
 const schema = z.object({
-    title: z.string().min(2),
-    description: z.string().min(2),
+    id: z.string().uuid(),
 })
 
-export class CreateTodoItemController implements IController{
-    constructor(private readonly createTodoItemUseCase: CreateTodoItemUseCase){}
+export class DeleteTodoItemController implements IController{
+    constructor(private readonly deleteTodoItemUseCase: DeleteTodoItemUseCase) {}
 
-    async handle({ body, userId }: IRequest): Promise<IResponse> {
+    async handle({ params, userId }: IRequest): Promise<IResponse> {
         try {
 
-            const { title, description } = schema.parse(body);
+            const { id } = schema.parse(params);
+
 
             if (!userId){
                 return {
@@ -25,12 +25,12 @@ export class CreateTodoItemController implements IController{
                 };
             }
 
-            const todoItem = await this.createTodoItemUseCase.execute({ userId, title, description});
+            await this.deleteTodoItemUseCase.execute({ id, userId });
+                return {
+                    statusCode: 204,
+                    body: null,
+                }
 
-            return {
-                statusCode: 200,
-                body: todoItem,
-            }
         } catch (error){
             if (error instanceof ZodError){
                 return {

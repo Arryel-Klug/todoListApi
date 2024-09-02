@@ -1,4 +1,3 @@
-
 import { verify } from "jsonwebtoken";
 import { IData, IMiddleware, IRequest, IResponse } from "../interfaces/IMiddleware";
 import { env } from "../config/env";
@@ -32,7 +31,7 @@ export class AuthenticationMiddleware implements IMiddleware{
             return{
                 statusCode: 401,
                 body: {
-                    error: 'Invalid token.'
+                    error: 'Unauthorized'
                 },
             };
         }
